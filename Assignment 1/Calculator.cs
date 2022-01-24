@@ -43,7 +43,8 @@ namespace Assignment_1
                         }
                         else if (_operators[element] <= _operators[operators.Peek()])
                         {
-                            output.Push(element);
+                            output.Push(operators.Pop());
+                            operators.Push(element);
                         }
                     }
                     else
@@ -76,6 +77,55 @@ namespace Assignment_1
             }
 
             return output;
+        }
+
+        public static Stack<object> CalculatePostfixnotation(CArray inputCArray)
+        {
+            object[] input = inputCArray.ToArray();
+            var result = new Stack<object>();
+            foreach (var element in input)
+            {
+                if (element != null)
+                {
+                    if (element is double || element is int)
+                    {
+                        result.Push(element);
+                    }
+                    else 
+                    {
+                        var secondNum = result.Pop();
+                        var firstNum = result.Pop();
+                        result.Push(EvaluatePostfix(firstNum, secondNum, element));
+                    }
+                }
+            }
+            return result;
+        }
+
+        private static double EvaluatePostfix(object firstNumber, object secondNumber, object operation)
+        {
+            double num1 = Convert.ToDouble(firstNumber);
+            double num2 = Convert.ToDouble(secondNumber);
+            double resultOfCalculations = 0;
+            switch (operation)
+            {
+                case '+':
+                    resultOfCalculations = num1 + num2;
+                    break;
+                case '-':
+                    resultOfCalculations = num1 - num2;
+                    break;
+                case '*':
+                    resultOfCalculations = num1 * num2;
+                    break;
+                case '/':
+                    resultOfCalculations = num1 / num2;
+                    break;
+                case '^':
+                    resultOfCalculations = Math.Pow(num1, num2);
+                    break;
+            }
+            return resultOfCalculations;
         }
         
     }

@@ -1,12 +1,11 @@
-using System;
 using System.Linq;
 
 namespace Assignment_1
 {
     public class CArray
     {
-        private object[] _array = new object[15];
-        
+        private static object[] _array = new object[15];
+
         private int _tailPointer = 0;
 
         public void Insert(int index, object element)
@@ -68,7 +67,7 @@ namespace Assignment_1
             return _array[index];
         }
 
-        public int IndexOf(int element)
+        public static int IndexOf(int element)
         {
             var index = -1;
             for (var i = 0; i < _array.Length; i++)
@@ -80,6 +79,16 @@ namespace Assignment_1
             }
 
             return index;
+        }
+
+        public bool Empty()
+        {
+            return _tailPointer == 0;
+        }
+
+        public object[] ToArray()
+        {
+            return _array.ToArray();
         }
     }
 }

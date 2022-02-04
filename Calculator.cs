@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Assignment_1
 {
     public class Calculator
     {
-        private static char[] isOperators = {'^', '*', '/', '+', '-'};
-        private static Dictionary<char, int> _operators = new Dictionary<char, int>()
+        private static object[] isOperators = {'^', '*', '/', '+', '-'};
+        private static Dictionary<object, int> _operators = new Dictionary<object, int>()
         {
             {'(', 0},
             {')', 0},
@@ -19,21 +18,35 @@ namespace Assignment_1
             {'^', 4},
         };
         
-        public static CArray ConvertToPostfixnotation(string inputString)
+        public static CArray ConvertToPostfixnotation(object[] input)
         {
-            inputString = Regex.Replace(inputString, @"\s", ""); // Create tokenization method
+            //inputString = Regex.Replace(inputString, @"\s", ""); // Create tokenization method
             var output = new CArray();
-            var operators = new Stack<char>();
+            var operators = new Stack<object>();
             
-            foreach (var element in inputString)
+            foreach (var element in input)
             {
-                bool elementIsInt = char.IsDigit(element);
+                //bool elementIsInt = char.IsDigit(element);
                 bool elementIsOperator = Array.Exists(isOperators, x => x == element);
-                if (elementIsInt)
+                if (element is double || element is float || element is int)
                 {
-                    output.Push(Char.GetNumericValue(element));
+                    //output.Push(Char.GetNumericValue(element));
+                    output.Push(element);
                 }
-                else if(elementIsOperator)
+                else if (element is '(')
+                {
+                    operators.Push(element);
+                }
+                else if (element is ')')
+                {
+                    while(operators.Count != 0 && (char)operators.Peek() != ('('))
+                    {
+                        output.Push(operators.Pop());
+                    }
+
+                    operators.Pop();
+                }
+                else if(element is char && element is not '(' || element is not ')')
                 {
                     if (operators.Count() != 0)
                     {
@@ -51,19 +64,6 @@ namespace Assignment_1
                     {
                         operators.Push(element);
                     }
-                }
-                else if (element == '(')
-                {
-                    operators.Push(element);
-                }
-                else if (element == ')')
-                {
-                    while(operators.Count != 0 && operators.Peek() != ('('))
-                    {
-                        output.Push(operators.Pop());
-                    }
-
-                    operators.Pop();
                 }
                 else
                 {
@@ -127,6 +127,6 @@ namespace Assignment_1
             }
             return resultOfCalculations;
         }
-        
+
     }
 }
